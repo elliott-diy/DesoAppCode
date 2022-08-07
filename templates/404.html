@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>404</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>404 Not Found</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
 </head>
-<body>
-404 Not Found
+
+<body style="color: #e0e0e0; background: #0f0f0f;">
+    {% include 'navbar.html' %}
+    <div style="text-align: center">
+        <h1>404 - Not Found</h1>
+        <img id="image" style="max-height:500px; max-width:500px; height:auto; width:auto;">
+    </div>
+    <script type="text/javascript">
+        var image_element = document.getElementById('image');
+        fetch('https://api.waifu.pics/sfw/waifu')
+            .then((response) => response.json())
+            .then((data) => image_element.src = data.url);
+    </script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bs-init.js"></script>
+    <script src="/static/js/theme.js"></script>
 </body>
+
 </html>

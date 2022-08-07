@@ -1,0 +1,40 @@
+<nav class="navbar navbar-light navbar-expand shadow mb-4 topbar static-top"
+    style="background: #5a2e98;--bs-body-bg: #5a2e98;">
+    <div class="container-fluid">
+        <h1><a href="/" style="color: #e0e0e0; text-decoration: none;">DeMoment</a></h1>
+        <!-- <h1 style="color: #aaaaaa">&nbsp;/&nbsp;</h1> -->
+        <span id="navbar-path" style="color: #e0e0e0; white-space: no-wrap; overflow: visible;"></span>
+        <ul class="navbar-nav flex-nowrap ms-auto">
+            <li class="nav-item dropdown no-arrow">
+                <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown">
+                    {% if show_login_button == false %}
+                    <span class="d-none d-lg-inline me-2 text-gray-600 small" style="color: #aaaaaa;">{{
+                        username }}</span>
+                    <img class="border rounded-circle img-profile" src="{{ photo_url }}" alt="Profile Photo" />
+                    {% else %}
+                    <button class="btn btn-primary" onclick="login();"
+                        style="background: #834fd6;border-color: #834fd6;">Login</button>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        var e = document.createElement('h1');
+        e.innerText = '\u00A0' + window.location.pathname.split('/').join('\u00A0/\u00A0');
+        document.getElementById('navbar-path').appendChild(e);
+        /*segments = window.location.pathname.split('/');
+        for (var segment of segments) {
+            if (segment != "") {
+                var separator_element = document.createElement('h1');
+                separator_element.innerText = '\u00A0/\u00A0';
+                separator_element.style = 'color: #aaaaaa';
+                document.getElementById('navbar-path').appendChild(separator_element);
+                document.getElementById('navbar-path').appendChild(document.createTextNode('&#8205;'));
+                var segment_element = document.createElement('h1');
+                segment_element.innerText = segment;
+                document.getElementById('navbar-path').appendChild(segment_element);
+            }
+        }*/
+    </script>
+</nav>

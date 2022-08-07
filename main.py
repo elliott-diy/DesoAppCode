@@ -54,7 +54,6 @@ async def show_chain(request: Request, chain_name: str):
         'request': request,
         'deso': deso,
         'show_login_button': show_login_button,
-        'chain_name': chain_name.upper(),
         'posts': post_db.fetch(query={'chain': chain_name}, limit=10).items,
     }
     if credentials:
@@ -64,16 +63,9 @@ async def show_chain(request: Request, chain_name: str):
         context['username'] = profile_info['Profile']['Username']
         context['photo_url'] = photo_url
     return templates.TemplateResponse(
-        'mainpage.html',
+        'chain.html',
         context,
     )
-
-# @app.get('/login', response_class=HTMLResponse)
-# async def login(request: Request):
-#     return templates.TemplateResponse(
-#         'login.html',
-#         {'request': request},
-#     )
 
 
 @app.get('/user/{username}', response_class=HTMLResponse)
@@ -92,30 +84,14 @@ async def show_user(request: Request, username: str):
         'profile.html',
         {
             'request': request,
-            'name': profile_info['Profile']['Username'],
-            'bio': profile_info['Profile']['Description'],
-            'photo': photo_url,
+            'username': profile_info['Profile']['Username'],
+            'description': profile_info['Profile']['Description'],
+            'photo_url': photo_url,
         },
     )
 
 
-# @app.get('/chain/{chain}', response_class=HTMLResponse)
-# async def show_community(request: Request, chain: str):
-#     # code to get posts from chain
-#     return templates.TemplateResponse(
-#         'chain.html',
-#         {'request': request, 'chain_name': chain},
-#     )
-
-
-# @app.get('/post/new', response_class=HTMLResponse)
-# async def new_post(request: Request, credentials: Credentials = Depends(get_credentials)):
-#     return templates.TemplateResponse(
-#         'new_post.html',
-#         {'request': request},
-#     )
-
-
+# TODO: Add single post frontend page
 # @app.get('/post/{id}', response_class=HTMLResponse)
 # async def show_post(request: Request, id: str):
 #     post = post_db.get(id)
@@ -134,7 +110,7 @@ async def show_user(request: Request, username: str):
 
 @app.post('/api/auth')
 async def api_auth(request: Request, credentials: Credentials):
-    # TODO: do iteration over model instead
+    # TODO: Iterate over model fields instead
     request.session['public_key'] = credentials.public_key
     request.session['seed_hex'] = credentials.seed_hex
     request.session['access_level'] = credentials.access_level
@@ -154,6 +130,7 @@ async def unauthorized_handler(request: Request, exception):
     if '/api' not in request.url.path and request.method == 'GET':
         return RedirectResponse('/login')
     else:
+        # TODO: Properly unhandle exception
         raise exception
 
 

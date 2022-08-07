@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>DeMoment</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+</head>
+
+<body id="page-top" style="color: #e0e0e0; background: #0f0f0f;">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper" style="background: #0f0f0f;">
+            <div id="content">
+                {% include 'navbar.html' %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-xl-3">
+                            <div class="card" style="border-color: #1c1c1c;">
+                                <div class="card-body" style="color: #aaaaaa; background: #1c1c1c;">
+                                    <h4 class="card-title" style="color: #e0e0e0">Top Chains</h4>
+                                    <ol>
+                                        <li><a href="/chain/root"
+                                                style="color: #aaaaaa; text-decoration: none;">Root</a></li>
+                                        <li><a href="/chain/deso"
+                                                style="color: #aaaaaa; text-decoration: none;">DeSo</a></li>
+                                        <li><a href="/chain/python"
+                                                style="color: #aaaaaa; text-decoration: none;">Python</a></li>
+                                        <li><a href="/chain/javascript"
+                                                style="color: #aaaaaa; text-decoration: none;">JavaScript</a></li>
+                                        <li><a href="/chain/mlh" style="color: #aaaaaa; text-decoration: none;">MLH</a>
+                                        </li>
+                                        <li><a href="/chain/hacking"
+                                                style="color: #aaaaaa; text-decoration: none;">Ethical Hacking</a></li>
+                                        <li><a href="/chain/unix"
+                                                style="color: #aaaaaa; text-decoration: none;">Unix</a></li>
+                                        <li><a href="/chain/gamedev" style="color: #aaaaaa; text-decoration: none;">Game
+                                                Dev</a></li>
+                                        <li><a href="/chain/cooking"
+                                                style="color: #aaaaaa; text-decoration: none;">Cooking</a><br></li>
+                                        <li><a href="/chain/bootstrap"
+                                                style="color: #aaaaaa; text-decoration: none;">Bootstrap</a></li>
+                                        <li><a href="/chain/anime"
+                                                style="color: #aaaaaa; text-decoration: none;">Anime</a></li>
+                                        <li><a href="/chain/jstris"
+                                                style="color: #aaaaaa; text-decoration: none;">Jstris</a></li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-xl-6" style="color: #aaaaaa">
+                            <div class="card" style="background: #1c1c1c;border-color: #1c1c1c;">
+                                <div class="card-body">
+                                    <h4 style="color: #e0e0e0">New Post</h4>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="post_title">
+                                            <strong>Title</strong>
+                                        </label>
+                                        <input id="post_title" class="form-control" type="text"
+                                            placeholder="Input a title..." name="post_title" required="required"
+                                            data-error="Title is required."
+                                            style="background: #2e2e2e;border-color: #2e2e2e;" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="post_content">
+                                            <strong>Message</strong>
+                                        </label>
+                                        <textarea id="post_content" class="form-control" type="text"
+                                            placeholder="Input a message..." name="post_content" rows="4"
+                                            required="required" data-error="Message is required."
+                                            style="background-color: #2e2e2e; border-color: #2e2e2e; resize: none;"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="new_post();"
+                                        style="background: #834fd6;border-color: #834fd6;">Post</button>
+                                </div>
+                            </div>
+                            <hr>
+                            {% for post in posts %}
+                            {% set user = deso.User() %}
+                            {% set profile_info = user.getSingleProfile(publicKey=post['public_key']).json() %}
+                            <div class="card" style="background: #1c1c1c;border-color: #1c1c1c;">
+                                <div class="card-body">
+                                    {# <img class="border rounded-circle img-profile dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown"
+                                        src="{{ user.getProfilePicURL(post['public_key']) }}" alt="Profile Photo" />#}
+                                    <h6 class="text-muted card-subtitle mb-2">{{ profile_info['Profile']['Username'] }}
+                                    </h6>
+                                    <h4 class="card-title" style="color: #e0e0e0;">{{ post['title'] }}</h4>
+                                    <p class="card-text" style="color: #aaaaaa;">{{ post['content'] }}</p>
+                                    <i class="far fa-arrow-alt-circle-up"
+                                        style="padding-right: 10px;font-size: 20px;"></i>
+                                    <i class="far fa-caret-square-down" style="font-size: 20px;"></i>
+                                    <i class="fas fa-comment" style="padding-left: 10px;font-size: 20px;"></i>
+                                </div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bs-init.js"></script>
+    <script src="/static/js/theme.js"></script>
+    <script src="/static/js/messages.js"></script>
+    <script src="/static/js/login.js"></script>
+    <script src="/static/js/new_post.js"></script>
+</body>
+
+</html>
