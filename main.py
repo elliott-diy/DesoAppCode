@@ -4,6 +4,7 @@ import deso
 from deta import Deta
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -136,8 +137,7 @@ async def unauthorized_handler(request: Request, exception):
     if '/api' not in request.url.path and request.method == 'GET':
         return RedirectResponse(f'/login?returnUrl={str(request.url)}')
     else:
-        # TODO: Properly unhandle exception
-        raise exception
+        return await http_exception_handler(request, exception)
 
 
 @app.exception_handler(404)
