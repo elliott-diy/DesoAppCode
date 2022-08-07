@@ -56,14 +56,12 @@ function handleLogin(payload) {
         headers: { 'Content-Type': 'application/json' }
     };
     fetch('/api/auth', fetchOptions).then(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnUrl = urlParams.get('returnUrl');
+        if (returnUrl) {
+            window.location.assign(returnUrl);
+        }
         window.location.reload();
-    });
-}
-
-function uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
     });
 }
 

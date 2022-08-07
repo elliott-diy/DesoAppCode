@@ -32,7 +32,7 @@ async def get_credentials(request: Request):
         public_key=public_key,
         seed_hex=seed_hex,
         access_level=access_level,
-        access_level_hmac=access_level_hmac
+        access_level_hmac=access_level_hmac,
     )
     return credentials
 
@@ -74,6 +74,7 @@ async def show_user(request: Request, username: str):
     if username == 'me':
         credentials = await get_credentials(request)
         profile_info = user.getSingleProfile(publicKey=credentials.public_key).json()
+        return RedirectResponse(f"/user/{profile_info['Profile']['Username']}")
     else:
         profile_info = user.getSingleProfile(username=username).json()
     if profile_info.get('error'):
@@ -108,6 +109,14 @@ async def show_user(request: Request, username: str):
 #     )
 
 
+@app.get('/login')
+async def login(request: Request):
+    return templates.TemplateResponse(
+        'login.html',
+        {'request': request},
+    )
+
+
 @app.post('/api/auth')
 async def api_auth(request: Request, credentials: Credentials):
     for key, value in credentials.dict().items():
@@ -122,11 +131,10 @@ async def api_create_post(post: Post, credentials: Credentials = Depends(get_cre
     return {'id': post.id}
 
 
-# TODO: Fix handling when user is not logged in
 @app.exception_handler(401)
 async def unauthorized_handler(request: Request, exception):
     if '/api' not in request.url.path and request.method == 'GET':
-        return RedirectResponse('/login')
+        return RedirectResponse(f'/login?returnUrl={str(request.url)}')
     else:
         # TODO: Properly unhandle exception
         raise exception
