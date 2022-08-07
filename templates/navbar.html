@@ -12,8 +12,9 @@
             <li class="nav-item dropdown no-arrow">
                 <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown">
                     {% if show_login_button == false %}
-                    <span class="d-none d-lg-inline me-2 text-gray-600 small" style="color: #aaaaaa;">{{
-                        username }}</span>
+                    <span class="d-none d-lg-inline me-2 text-gray-600 small">
+                        <a href="/user/{{ username }}" style="color: #aaaaaa; text-decoration: none">{{ username }}</a>
+                    </span>
                     <img class="rounded-circle img-profile" src="{{ photo_url }}" alt="Profile Photo" />
                     {% else %}
                     <button class="btn btn-primary" onclick="login();"
