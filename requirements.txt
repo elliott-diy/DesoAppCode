@@ -1,0 +1,8 @@
+deso==2.2.0
+deta==1.1.0
+python-dotenv==0.20.0
+fastapi==0.79.0
+starlette==0.19.1
+pydantic==1.9.1
+Jinja2==3.1.2
+itsdangerous==2.1.2

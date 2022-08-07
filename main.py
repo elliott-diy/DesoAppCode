@@ -17,32 +17,63 @@ middleware = [Middleware(SessionMiddleware, secret_key=os.urandom(24).hex())]
 app = FastAPI(middleware=middleware)
 app.mount('/static', StaticFiles(directory='static'), name='static')
 templates = Jinja2Templates(directory='templates')
-
-SEED_HEX = '3467f503105e1e54ae76ce585bac1defb356f9356cc986461f0c6781de5cf023dbf7cbb1dc75434e80740746bb963496b0200006fd71897c500a515029e9b9d3'
-PUBLIC_KEY = 'BC1YLiN6G2ymqYrXwGSEcYwzWAXyTuUT1REkGgXwXf6Jrp49JXDKeT8'
-deso_social = deso.Social(PUBLIC_KEY, SEED_HEX)
-print(deso_social.submitPost("This is a test post"))
-deso_posts = deso.Posts()
-print(deso_posts.getHotFeed(taggedUsername="TESTACC").json())
+deta = Deta(os.getenv('DETA_PROJECT_KEY'))
+post_db = deta.Base('posts')
 
 
-# @app.get('/', response_class=HTMLResponse)
-@app.get('/')
-def root():
-    posts = deso.Posts()
-    hot_feed = posts.getHotFeed(taggedUsername="ItsAditya").json()
-    return hot_feed
+async def get_credentials(request: Request):
+    public_key = request.session.get('public_key')
+    seed_hex = request.session.get('seed_hex')
+    access_level = request.session.get('access_level')
+    access_level_hmac = request.session.get('access_level_hmac')
+    if not public_key or not seed_hex or not access_level or not access_level_hmac:
+        raise HTTPException(401)
+    credentials = Credentials(
+        public_key=public_key,
+        seed_hex=seed_hex,
+        access_level=access_level,
+        access_level_hmac=access_level_hmac
+    )
+    return credentials
+
 
 @app.get('/')
 async def root():
     return RedirectResponse('/chain/root')
 
-@app.get('/login', response_class=HTMLResponse)
-def login(request: Request):
+
+@app.get('/chain/{chain_name}', response_class=HTMLResponse)
+async def show_chain(request: Request, chain_name: str):
+    if not request.session.get('public_key'):
+        show_login_button = True
+        credentials = None
+    else:
+        show_login_button = False
+        credentials = await get_credentials(request)
+    context = {
+        'request': request,
+        'deso': deso,
+        'show_login_button': show_login_button,
+        'chain_name': chain_name.upper(),
+        'posts': post_db.fetch(query={'chain': chain_name}, limit=10).items,
+    }
+    if credentials:
+        user = deso.User()
+        profile_info = user.getSingleProfile(publicKey=credentials.public_key).json()
+        photo_url = user.getProfilePicURL(credentials.public_key)
+        context['username'] = profile_info['Profile']['Username']
+        context['photo_url'] = photo_url
     return templates.TemplateResponse(
-        'login.html',
-        {'request': request}
+        'mainpage.html',
+        context,
     )
+
+# @app.get('/login', response_class=HTMLResponse)
+# async def login(request: Request):
+#     return templates.TemplateResponse(
+#         'login.html',
+#         {'request': request},
+#     )
 
 
 @app.get('/user/{username}', response_class=HTMLResponse)
