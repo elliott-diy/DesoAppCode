@@ -1,2 +1,6 @@
 # Project exclude paths
 /node_modules/
+.env
+__pycache__
+venv
+.venv
