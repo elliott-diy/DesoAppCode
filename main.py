@@ -81,7 +81,7 @@ async def show_user(request: Request, username: str):
     public_key = profile_info['Profile']['PublicKeyBase58Check']
     photo_url = user.getProfilePicURL(public_key)
     return templates.TemplateResponse(
-        'profile.html',
+        'user.html',
         {
             'request': request,
             'username': profile_info['Profile']['Username'],
@@ -110,11 +110,8 @@ async def show_user(request: Request, username: str):
 
 @app.post('/api/auth')
 async def api_auth(request: Request, credentials: Credentials):
-    # TODO: Iterate over model fields instead
-    request.session['public_key'] = credentials.public_key
-    request.session['seed_hex'] = credentials.seed_hex
-    request.session['access_level'] = credentials.access_level
-    request.session['access_level_hmac'] = credentials.access_level_hmac
+    for key, value in credentials.dict().items():
+        request.session[key] = value
 
 
 @app.post('/api/create_post')
@@ -125,6 +122,7 @@ async def api_create_post(post: Post, credentials: Credentials = Depends(get_cre
     return {'id': post.id}
 
 
+# TODO: Fix handling when user is not logged in
 @app.exception_handler(401)
 async def unauthorized_handler(request: Request, exception):
     if '/api' not in request.url.path and request.method == 'GET':

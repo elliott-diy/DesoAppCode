@@ -21,7 +21,7 @@
                         <div class="col-md-4 col-xl-3">
                             <div class="card" style="border-color: #1c1c1c;">
                                 <div class="card-body" style="color: #aaaaaa; background: #1c1c1c;">
-                                    <h4 class="card-title" style="color: #e0e0e0">Top Chains</h4>
+                                    <h4 class="card-title" style="color: #e0e0e0"><strong>Top Chains</strong></h4>
                                     <ol>
                                         <li><a href="/chain/root"
                                                 style="color: #aaaaaa; text-decoration: none;">Root</a></li>
@@ -54,7 +54,7 @@
                         <div class="col-md-4 col-xl-6" style="color: #aaaaaa">
                             <div class="card" style="background: #1c1c1c;border-color: #1c1c1c;">
                                 <div class="card-body">
-                                    <h4 style="color: #e0e0e0">New Post</h4>
+                                    <h4 style="color: #e0e0e0"><strong>New Post</strong></h4>
                                     <div class="mb-3">
                                         <label class="form-label" for="post_title">
                                             <strong>Title</strong>
@@ -77,18 +77,26 @@
                                         style="background: #834fd6;border-color: #834fd6;">Post</button>
                                 </div>
                             </div>
-                            <hr>
                             {% for post in posts %}
                             {% set user = deso.User() %}
                             {% set profile_info = user.getSingleProfile(publicKey=post['public_key']).json() %}
-                            <div class="card" style="background: #1c1c1c;border-color: #1c1c1c;">
+                            <div class="card"
+                                style="background: #1c1c1c;border-color: #1c1c1c; margin-top: 20px; margin-bottom: 20px">
                                 <div class="card-body">
-                                    {# <img class="border rounded-circle img-profile dropdown-toggle nav-link"
-                                        aria-expanded="false" data-bs-toggle="dropdown"
-                                        src="{{ user.getProfilePicURL(post['public_key']) }}" alt="Profile Photo" />#}
-                                    <h6 class="text-muted card-subtitle mb-2">{{ profile_info['Profile']['Username'] }}
-                                    </h6>
-                                    <h4 class="card-title" style="color: #e0e0e0;">{{ post['title'] }}</h4>
+                                    <span>
+                                        <img class="rounded-circle img-profile" width="20" height="20"
+                                            style="margin-bottom: 4px;"
+                                            src="{{ user.getProfilePicURL(post['public_key']) }}" alt="Profile Photo" />
+                                        <h6 class="text-muted card-subtitle mb-2" style="display: inline">
+                                            <a href="/user/{{ profile_info['Profile']['Username'] }}"
+                                                style="color: #aaaaaa; text-decoration: none">
+                                                {{ profile_info['Profile']['Username'] }}
+                                            </a>
+                                        </h6>
+                                    </span>
+                                    <h4 class="card-title" style="color: #e0e0e0; margin-top: 6px;">
+                                        <strong>{{ post['title'] }}</strong>
+                                    </h4>
                                     <p class="card-text" style="color: #aaaaaa;">{{ post['content'] }}</p>
                                     <i class="far fa-arrow-alt-circle-up"
                                         style="padding-right: 10px;font-size: 20px;"></i>
@@ -96,7 +104,6 @@
                                     <i class="fas fa-comment" style="padding-left: 10px;font-size: 20px;"></i>
                                 </div>
                             </div>
-                            <hr>
                             {% endfor %}
                         </div>
                     </div>
